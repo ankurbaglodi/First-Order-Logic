@@ -317,7 +317,7 @@ def buildTableIndexing(KBList, tableIndexPositive, tableIndexNegative):
             if str == type(temperory):
                 temperory = re.findall(r"(\W?\w+)\(", temperory)[0]
                 tableIndexPositive[temperory].append(iterator)
-            elif list == type(temperory) and 2 == len(temperory):
+            elif list == type(temperory) and 2 == len(temperory) and temperory[0] == '~':
                 temperory = re.findall(r"(\W?\w+)\(", temperory[1])[0]
                 tableIndexNegative[temperory].append(iterator)
             else:
@@ -325,6 +325,26 @@ def buildTableIndexing(KBList, tableIndexPositive, tableIndexNegative):
                     if "|" != temperory[subiterator]:
                         queue.append(temperory[subiterator])
     return tableIndexPositive,tableIndexNegative
+
+def buildIndexRehash(tableIndexPositive, tableIndexNegative,statement,indexInKB):
+    queue = []
+    queue.append(statement)
+    while (len(queue) != 0):
+        temperory = queue.pop(0)
+        if str == type(temperory):
+            temperory = re.findall(r"(\W?\w+)\(", temperory)[0]
+            tableIndexPositive[temperory].append(indexInKB)
+        elif list == type(temperory) and 2 == len(temperory) and temperory[0] == '~':
+            temperory = re.findall(r"(\W?\w+)\(", temperory[1])[0]
+            tableIndexNegative[temperory].append(indexInKB)
+        else:
+            for subiterator in range(0, len(temperory)):
+                if "|" != temperory[subiterator]:
+                    queue.append(temperory[subiterator])
+
+
+    return tableIndexPositive, tableIndexNegative
+
 
 def removeAllInnerBracketForDisjunction(x):
     output = []
@@ -1157,6 +1177,160 @@ def refuteNewPredicate(x):
                 output.append(['~',iterator])
         return output
 
+def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
+    KBListToActOn = copy.copy(KBList)
+    # Convert the "statement" to CNF
+    parser = yacc.yacc()
+    lexer = lex.lex()
+    temp = statement.replace(" ", "")
+    temp = parser.parse(temp, lexer)
+    temp = removeImply(temp)
+    temp = moveNotInwards(temp)
+    temp = reduceTheKB(temp)
+    temp = removeInnerBracket(temp)
+    temp = refuteNewClause(temp)
+    count = 1
+    # Add the refuted statement into the new KB List
+    KBListToActOn.append(temp)
+    count = 0
+    while True:
+        print count
+        count += 1
+        if count == 0:
+            print ""
+        print len(KBListToActOn)
+        superCounter  = 0
+        newList = []
+        for iterator in KBListToActOn:
+            if iterator != '~' and iterator != '&' and iterator != "|":
+                #Handle here for string and negated list
+                if type(iterator) == str :
+                    tempAtomicSubIterator = splitThePredicate(iterator)
+                    isNegated = False
+                    #Get the index List
+                    listOfIndex = None
+                    listOfIndex = tableIndexNegative[tempAtomicSubIterator[0]]
+                    tempList = []
+                    for indexIterator in listOfIndex:
+                            answer = resolveFurtherBruteForceNextVersion(iterator,KBListToActOn[indexIterator])
+                            #answer can have 3 cases
+                            #1) Null set -> then return True
+                            #2) None -> Then continue cannot be unified
+                            #3) List -> A derived KB
+                            if answer == None:
+                                continue
+                            elif len(answer) == 0:
+                                return True
+                            else:
+                                tempList.append(answer)
+
+                elif (type(iterator) == list and len(iterator) == 2 and iterator[0] == '~'):
+                    tempAtomicSubIterator = splitThePredicate(iterator[1])
+                    isNegated = True
+                    # Get the index List
+                    listOfIndex = None
+                    listOfIndex = tableIndexPositive[tempAtomicSubIterator[0]]
+                    tempList = []
+                    for indexIterator in listOfIndex:
+                        answer = resolveFurtherBruteForceNextVersion(iterator, KBListToActOn[indexIterator])
+                        # answer can have 3 cases
+                        # 1) Null set -> then return True
+                        # 2) None -> Then continue cannot be unified
+                        # 3) List -> A derived KB
+                        if answer == None:
+                            continue
+                        elif len(answer) == 0:
+                            return True
+                        else:
+                            tempList.append(answer)
+                else:
+                    #This is for regular list
+                    for subiterator in iterator:
+                        if subiterator != '~' and subiterator != '&' and subiterator != "|":
+                            #Split the predicate
+                            if type(subiterator) == str:
+                                tempAtomicSubIterator = splitThePredicate(subiterator)
+                                isNegated = False
+                            elif type(subiterator) == list and len(subiterator) == 2:
+                                tempAtomicSubIterator = splitThePredicate(subiterator[1])
+                                isNegated = True
+
+                            #Get the index List
+                            listOfIndex = None
+                            if isNegated == True:
+                                listOfIndex = tableIndexPositive[tempAtomicSubIterator[0]]
+                            else:
+                                listOfIndex = tableIndexNegative[tempAtomicSubIterator[0]]
+
+                            tempList = []
+                            if listOfIndex != None:
+                                for indexIterator in listOfIndex:
+                                    answer = resolveFurtherBruteForceNextVersion(iterator,KBListToActOn[indexIterator])
+                                    #answer can have 3 cases
+                                    #1) Null set -> then return True
+                                    #2) None -> Then continue cannot be unified
+                                    #3) List -> A derived KB
+                                    if answer == None:
+                                        continue
+                                    elif len(answer) == 0:
+                                        return True
+                                    else:
+                                        tempList.append(answer)
+
+            #Handle the validation for answers code here
+            #3 Cases to be handeled
+            # 1)The new ~KB is there in the KB then Return True
+            # 2) The new kb is there in the KB then continue
+            # 3) Else add the fact to the main KB and then update the super counter
+            for superAnswer in tempList:
+                    for answerIterator in superAnswer:
+                        answerIterator = answerIterator[0] if type(answerIterator) == list and len(answerIterator) == 2 and (
+                            (type(answerIterator[0]) == str) \
+                        or \
+                        (type(answerIterator[0]) == list and len(answerIterator[0]) == 2 and type(
+                            answerIterator[0][1]) == str)) else answerIterator
+                        answerIterator = answerIterator[0] if type(answerIterator) == list and len(
+                            answerIterator) == 1 else answerIterator
+
+                        #Handling case 1 here......
+                        # Check the facts
+                        if type(answerIterator) == str:
+                            variablesOfAnswer = splitThePredicate(answerIterator)
+                            isFact = True
+                            for superAnswerIterator in variablesOfAnswer[1]:
+                                if superAnswerIterator[0].islower() == True:
+                                    isFact = False
+                                    break
+                            if isFact == True and ['~', answerIterator] in KBListToActOn:
+                                return True
+                        if type(answerIterator) == list and len(answerIterator) == 2 and answerIterator[
+                            0] == '~' and type(answerIterator[1]) == str:
+                            variablesOfAnswer = splitThePredicate(answerIterator[1])
+                            isFact = True
+                            for superAnswerIterator in variablesOfAnswer[1]:
+                                if superAnswerIterator[0].islower() == True:
+                                    isFact = False
+                                    break
+                            if isFact == True and answerIterator[1] in KBListToActOn:
+                                return True
+
+                        # Handling case 2 & 3 here......
+                        isPresentInKB = checkIfPresentInKB(answerIterator, KBListToActOn)
+                        if isPresentInKB == False and len(answerIterator) > 0:
+                            superCounter += 1
+                            newList.append(answerIterator)
+                            # print "--------------------"
+                            print "Answer " + str(answerIterator)
+                            # print "--------------------"
+        if superCounter == 0:
+            return False
+        KBListToActOn.extend(newList)
+        tableIndexPositive = defaultdict(list)
+        tableIndexNegative = defaultdict(list)
+        tableIndexPositive, tableIndexNegative = buildTableIndexing(KBList, tableIndexPositive, tableIndexNegative)
+
+
+
 
 #==========================================================================#
 #Functions concentrated on working on KB and the algorithm
@@ -1223,17 +1397,13 @@ if __name__ == "__main__":
     secondToCheck = splitThePredicate("A(v1,Bob)")
     # print unifyMaster(firstToCheck,secondToCheck,True,True)
     tempDict = {}
-    tempDict = newUnify(firstToCheck[1],secondToCheck[1],tempDict)
+    tempDict = newUnify(["a","b","Jhon"],["b","c","Jhon"],tempDict)
     print tempDict
     r = []
     # Call resolution
     numberOfQueries = int(readFileList[0])
     for iterator in range(1,numberOfQueries+1):
         print "-----------" , readFileList[iterator]
-        retCode = resolution(KBList,readFileList[iterator])
+        retCode = resolutionBFS(KBList,readFileList[iterator],tableIndexPositive,tableIndexNegative)
         r.append( retCode)
     print r
-
-
-
-
