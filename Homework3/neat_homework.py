@@ -1057,16 +1057,17 @@ def checkIfPresentInKB(answerIterator,KBListToActOn):
             if isPresent == True:
                 break
             for subiterator in answerIterator:
-                if type(iterator) == list:
-                    if subiterator in iterator:
-                        isPresent = True
-                        continue
-                    elif type(iterator) == str and type(subiterator) == str and subiterator == iterator:
-                        isPresent = True
-                        continue
-                else:
-                    isPresent = False
-                    break
+                if subiterator != '|' and subiterator != '&' and subiterator != '~':
+                    if type(iterator) == list:
+                        if subiterator in iterator:
+                            isPresent = True
+                            continue
+                        elif type(iterator) == str and type(subiterator) == str and subiterator == iterator:
+                            isPresent = True
+                            continue
+                    else:
+                        isPresent = False
+                        break
         return isPresent
     else:
         return False
@@ -1201,7 +1202,12 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
         print len(KBListToActOn)
         superCounter  = 0
         newList = []
+        counter = 1
         for iterator in KBListToActOn:
+            # if counter == 8:
+            #     print ""
+            # print counter
+            counter += 1
             if iterator != '~' and iterator != '&' and iterator != "|":
                 #Handle here for string and negated list
                 if type(iterator) == str :
@@ -1315,8 +1321,8 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
                                 return True
 
                         # Handling case 2 & 3 here......
-                        isPresentInKB = checkIfPresentInKB(answerIterator, KBListToActOn)
-                        if isPresentInKB == False and len(answerIterator) > 0:
+                        # isPresentInKB = checkIfPresentInKB(answerIterator, KBListToActOn)
+                        if answerIterator not in KBListToActOn and len(answerIterator) > 0:
                             superCounter += 1
                             newList.append(answerIterator)
                             # print "--------------------"
