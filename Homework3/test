@@ -1,27 +1,113 @@
-['~', 'H(Alice)'] ********
-['C(x,Bob)', '|', ['~', 'D(x,Bob)']] ********
-['~', 'H(Bob)'] ********
-H(Tom) ********
-['~', 'A(John)'] ********
-['~', 'G(John)'] ********
-['~', 'R(John)'] ********
-['~', 'H(Alice)'] ********
-['C(x,Bob)', '|', ['~', 'D(x,Bob)']] ********
-['~', 'H(Bob)'] ********
-C(John,Bob) ********
-H(Tom) ********
-['~', 'A(John)'] ********
-['~', 'G(John)'] ********
-['~', 'R(John)'] ********
-['~', 'A(Alice)'] ********
-['~', 'G(Alice)'] ********
-['~', 'R(Alice)'] ********
-['~', 'A(Bob)'] ********
-['~', 'G(Bob)'] ********
-['~', 'R(Bob)'] ********
-['~', 'D(x,Tom)'] ********
-F(Tom) ********
-[['~', 'C(John,y)'], '|', ['~', 'B(John,y)']] ********
-['~', 'F(John)'] ********
-['~', 'C(John,Alice)'] ********
-['~', 'C(John,Bob)'] ********
+Query is Ancestor(Liz,Bob)
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Ancestor(Liz,Charley) ********
+['~', 'Ancestor(Charley,Bob)'] ********
+Ancestor(Charley,Billy) ********
+
+
+['~', 'Mother(Liz,Bob)'] ********
+['~', 'Father(Liz,Bob)'] ********
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Ancestor(Liz,Charley) ********
+['~', 'Ancestor(Charley,Bob)'] ********
+Ancestor(Charley,Billy) ********
+['~', 'Mother(Liz,Bob)'] ********
+['~', 'Father(Liz,Bob)'] ********
+['Ancestor(x,Charley)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Charley,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Charley,y)']] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Charley)']] ********
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Ancestor(Liz,Charley) ********
+['~', 'Ancestor(Charley,Bob)'] ********
+Ancestor(Liz,Billy) ********
+Ancestor(Charley,Billy) ********
+['~', 'Ancestor(Billy,Bob)'] ********
+['~', 'Mother(Liz,Bob)'] ********
+['~', 'Father(Liz,Bob)'] ********
+['Ancestor(x,Charley)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Charley,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Charley,y)']] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Charley)']] ********
+['~', 'Mother(Charley,Bob)'] ********
+['~', 'Father(Charley,Bob)'] ********
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Ancestor(Liz,Charley) ********
+['~', 'Ancestor(Charley,Bob)'] ********
+Ancestor(Liz,Billy) ********
+Ancestor(Charley,Billy) ********
+['~', 'Ancestor(Billy,Bob)'] ********
+['~', 'Mother(Liz,Bob)'] ********
+['~', 'Father(Liz,Bob)'] ********
+['Ancestor(x,Charley)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Charley,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Charley,y)']] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Charley)']] ********
+['~', 'Mother(Charley,Bob)'] ********
+['~', 'Father(Charley,Bob)'] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Billy,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Billy,y)']] ********
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Ancestor(Liz,Charley) ********
+['~', 'Ancestor(Charley,Bob)'] ********
+Ancestor(Liz,Billy) ********
+Ancestor(Charley,Billy) ********
+['~', 'Ancestor(Billy,Bob)'] ********
+['~', 'Mother(Liz,Bob)'] ********
+['~', 'Father(Liz,Bob)'] ********
+['Ancestor(x,Charley)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Charley,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Charley,y)']] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Charley)']] ********
+['~', 'Mother(Charley,Bob)'] ********
+['~', 'Father(Charley,Bob)'] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Billy,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Billy,y)']] ********
+['~', 'Mother(Billy,Bob)'] ********
+['~', 'Father(Billy,Bob)'] ********
+Parent(Liz,Charley) ********
+Parent(Charley,Billy) ********
+['~', 'Parent(Liz,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Liz,y)']] ********
+Ancestor(Liz,Charley) ********
+['~', 'Ancestor(Charley,Bob)'] ********
+Ancestor(Liz,Billy) ********
+Ancestor(Charley,Billy) ********
+['~', 'Ancestor(Billy,Bob)'] ********
+['~', 'Mother(Liz,Bob)'] ********
+['~', 'Father(Liz,Bob)'] ********
+['Ancestor(x,Charley)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Charley,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Charley,y)']] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Charley)']] ********
+['~', 'Mother(Charley,Bob)'] ********
+['~', 'Father(Charley,Bob)'] ********
+['Ancestor(x,Billy)', '|', ['~', 'Parent(x,Liz)']] ********
+['~', 'Parent(Billy,Bob)'] ********
+[['~', 'Ancestor(y,Bob)'], '|', ['~', 'Parent(Billy,y)']] ********
+['~', 'Mother(Billy,Bob)'] ********
+['~', 'Father(Billy,Bob)'] ********
+FALSE
+['FALSE']
+0.141000032425

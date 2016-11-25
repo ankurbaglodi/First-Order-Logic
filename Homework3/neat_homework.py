@@ -1030,47 +1030,41 @@ def resolveFurtherBruteForceNextVersion(first,second):
         return None
     return newPredicate
 
-def checkIfPresentInKB(answerIterator,KBListToActOn):
-    isNegatedPredicate = False
-    isPredicate = False
-    isList = False
-    if type(answerIterator) == list and len(answerIterator) == 2:
-        isNegatedPredicate = True
-    elif type(answerIterator) == str:
-        isPredicate = True
-    elif type(answerIterator) == list and len(answerIterator) >= 3:
-        isList = True
-    isPresent = False
-    if isNegatedPredicate == True:
-        if answerIterator in KBListToActOn:
+def checkIfPresentInKBMaster(statement,KBList):
+    for iterator in KBList:
+        if dedup(iterator,statement) == True:
             return True
-        else:
-            return False
-    elif isPredicate == True:
-        if answerIterator in KBListToActOn:
+    return False
+
+
+def checkIfPresentInKB(list1,list2):
+    #3 cases
+    # Case 1 : Both are string then check them
+    # Case 2: Both are negated string then check them
+    # Case 3 : Both are list then check one by one
+    if type(list1) == str and type(list2) == str:
+        if list1 == list2:
             return True
-        else:
-            return False
-    elif isList == True:
-        isPresent = False
-        for iterator in KBListToActOn:
-            if isPresent == True:
-                break
-            for subiterator in answerIterator:
-                if subiterator != '|' and subiterator != '&' and subiterator != '~':
-                    if type(iterator) == list:
-                        if subiterator in iterator:
-                            isPresent = True
-                            continue
-                        elif type(iterator) == str and type(subiterator) == str and subiterator == iterator:
-                            isPresent = True
-                            continue
-                    else:
-                        isPresent = False
-                        break
-        return isPresent
+    elif type(list1) == list and type(list2) == list and \
+        len(list1) == 2 and len(list2) == 2 and\
+        list1[0] == '~' and list2[0] == '~' and\
+            type(list1[1]) == type(list2[1]) and type(list1[1]) == str:
+        if list1[1] == list2[1]:
+            return True
+    elif type(list1) == type(list2) and type(list1) == list1 and\
+        len(list1) >= 3 and len(list2) >=3 and len(list1) == len(list2):
+        for iterator in list1:
+            if iterator not in list2:
+                return False
+        for iterator in list2:
+            if iterator not in list1:
+                return False
+        return True
     else:
         return False
+    return False
+
+
 
 
 
@@ -1218,6 +1212,7 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
                     listOfIndex = tableIndexNegative[tempAtomicSubIterator[0]]
                     tempList = []
                     for indexIterator in listOfIndex:
+                            print "Unifying Predicates" , str(iterator) , KBListToActOn[indexIterator]
                             answer = resolveFurtherBruteForceNextVersion(iterator,KBListToActOn[indexIterator])
                             #answer can have 3 cases
                             #1) Null set -> then return True
@@ -1238,6 +1233,7 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
                     listOfIndex = tableIndexPositive[tempAtomicSubIterator[0]]
                     tempList = []
                     for indexIterator in listOfIndex:
+                        print "Unifying Predicates", str(iterator), KBListToActOn[indexIterator]
                         answer = resolveFurtherBruteForceNextVersion(iterator, KBListToActOn[indexIterator])
                         # answer can have 3 cases
                         # 1) Null set -> then return True
@@ -1271,6 +1267,7 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
                             tempList = []
                             if listOfIndex != None:
                                 for indexIterator in listOfIndex:
+                                    print "Unifying Predicates", str(iterator), KBListToActOn[indexIterator]
                                     answer = resolveFurtherBruteForceNextVersion(iterator,KBListToActOn[indexIterator])
                                     #answer can have 3 cases
                                     #1) Null set -> then return True
@@ -1321,8 +1318,10 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
                                 return True
 
                         # Handling case 2 & 3 here......
-                        # isPresentInKB = checkIfPresentInKB(answerIterator, KBListToActOn)
-                        if answerIterator not in KBListToActOn and len(answerIterator) > 0:
+                        isPresentInKB = checkIfPresentInKBMaster(answerIterator, KBListToActOn)
+                        # if isPresentInKB
+                        # if answerIterator not in KBListToActOn and len(answerIterator) > 0:
+                        if isPresentInKB == False and len(answerIterator) > 0:
                             superCounter += 1
                             newList.append(answerIterator)
                             # print "--------------------"
@@ -1340,6 +1339,27 @@ def resolutionBFS(KBList,statement,tableIndexPositive,tableIndexNegative):
 
 #==========================================================================#
 #Functions concentrated on working on KB and the algorithm
+
+
+def dedup(x,y):
+    if type(x) == str and type(y) == list:
+        if x in y:
+            return True
+    if type(x) == str and type(y) == str:
+        if x == y:
+            return True
+    if type(x) == list and len(x) ==2 and type(y) == list:
+        if x in y:
+            return  True
+    if type(x) == list and len(x) == 2 and type(y) == list and len(y) == 2:
+        if x == y:
+            return True
+    if type(x) == list and len(x)>2:
+        bool_var = True
+        for each_x in x:
+            bool_var = bool_var and  dedup(each_x,y)
+        return bool_var
+
 
 #Start main function
 #Goal is read statements one by one and then put it into KB
@@ -1413,3 +1433,6 @@ if __name__ == "__main__":
         retCode = resolutionBFS(KBList,readFileList[iterator],tableIndexPositive,tableIndexNegative)
         r.append( retCode)
     print r
+
+    print dedup([['~', 'A'], 'B', ['~', 'C'], 'D'], [['~', 'C'], ['~', 'A'], 'D', 'B']), 'Suraj'
+
