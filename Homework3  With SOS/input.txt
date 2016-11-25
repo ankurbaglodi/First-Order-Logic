@@ -1,0 +1,6 @@
+1
+H(Bob)
+3
+(D(z,John) => H(x))
+(A(x) => D(x,x))
+A(Bob)
