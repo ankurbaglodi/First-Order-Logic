@@ -1,0 +1,220 @@
+Created by PLY version 3.9 (http://www.dabeaz.com/ply)
+
+Unused terminals:
+
+    COMMA
+
+Grammar
+
+Rule 0     S' -> pred
+Rule 1     pred -> LBRACKET NOT pred RBRACKET
+Rule 2     pred -> LBRACKET pred AND pred RBRACKET
+Rule 3     pred -> LBRACKET pred OR pred RBRACKET
+Rule 4     pred -> LBRACKET pred IMPLICATION pred RBRACKET
+Rule 5     pred -> VARIABLE
+
+Terminals, with rules where they appear
+
+AND                  : 2
+COMMA                : 
+IMPLICATION          : 4
+LBRACKET             : 1 2 3 4
+NOT                  : 1
+OR                   : 3
+RBRACKET             : 1 2 3 4
+VARIABLE             : 5
+error                : 
+
+Nonterminals, with rules where they appear
+
+pred                 : 1 2 2 3 3 4 4 0
+
+Parsing method: LALR
+
+state 0
+
+    (0) S' -> . pred
+    (1) pred -> . LBRACKET NOT pred RBRACKET
+    (2) pred -> . LBRACKET pred AND pred RBRACKET
+    (3) pred -> . LBRACKET pred OR pred RBRACKET
+    (4) pred -> . LBRACKET pred IMPLICATION pred RBRACKET
+    (5) pred -> . VARIABLE
+
+    LBRACKET        shift and go to state 2
+    VARIABLE        shift and go to state 3
+
+    pred                           shift and go to state 1
+
+state 1
+
+    (0) S' -> pred .
+
+
+
+state 2
+
+    (1) pred -> LBRACKET . NOT pred RBRACKET
+    (2) pred -> LBRACKET . pred AND pred RBRACKET
+    (3) pred -> LBRACKET . pred OR pred RBRACKET
+    (4) pred -> LBRACKET . pred IMPLICATION pred RBRACKET
+    (1) pred -> . LBRACKET NOT pred RBRACKET
+    (2) pred -> . LBRACKET pred AND pred RBRACKET
+    (3) pred -> . LBRACKET pred OR pred RBRACKET
+    (4) pred -> . LBRACKET pred IMPLICATION pred RBRACKET
+    (5) pred -> . VARIABLE
+
+    NOT             shift and go to state 5
+    LBRACKET        shift and go to state 2
+    VARIABLE        shift and go to state 3
+
+    pred                           shift and go to state 4
+
+state 3
+
+    (5) pred -> VARIABLE .
+
+    RBRACKET        reduce using rule 5 (pred -> VARIABLE .)
+    AND             reduce using rule 5 (pred -> VARIABLE .)
+    OR              reduce using rule 5 (pred -> VARIABLE .)
+    IMPLICATION     reduce using rule 5 (pred -> VARIABLE .)
+    $end            reduce using rule 5 (pred -> VARIABLE .)
+
+
+state 4
+
+    (2) pred -> LBRACKET pred . AND pred RBRACKET
+    (3) pred -> LBRACKET pred . OR pred RBRACKET
+    (4) pred -> LBRACKET pred . IMPLICATION pred RBRACKET
+
+    AND             shift and go to state 6
+    OR              shift and go to state 7
+    IMPLICATION     shift and go to state 8
+
+
+state 5
+
+    (1) pred -> LBRACKET NOT . pred RBRACKET
+    (1) pred -> . LBRACKET NOT pred RBRACKET
+    (2) pred -> . LBRACKET pred AND pred RBRACKET
+    (3) pred -> . LBRACKET pred OR pred RBRACKET
+    (4) pred -> . LBRACKET pred IMPLICATION pred RBRACKET
+    (5) pred -> . VARIABLE
+
+    LBRACKET        shift and go to state 2
+    VARIABLE        shift and go to state 3
+
+    pred                           shift and go to state 9
+
+state 6
+
+    (2) pred -> LBRACKET pred AND . pred RBRACKET
+    (1) pred -> . LBRACKET NOT pred RBRACKET
+    (2) pred -> . LBRACKET pred AND pred RBRACKET
+    (3) pred -> . LBRACKET pred OR pred RBRACKET
+    (4) pred -> . LBRACKET pred IMPLICATION pred RBRACKET
+    (5) pred -> . VARIABLE
+
+    LBRACKET        shift and go to state 2
+    VARIABLE        shift and go to state 3
+
+    pred                           shift and go to state 10
+
+state 7
+
+    (3) pred -> LBRACKET pred OR . pred RBRACKET
+    (1) pred -> . LBRACKET NOT pred RBRACKET
+    (2) pred -> . LBRACKET pred AND pred RBRACKET
+    (3) pred -> . LBRACKET pred OR pred RBRACKET
+    (4) pred -> . LBRACKET pred IMPLICATION pred RBRACKET
+    (5) pred -> . VARIABLE
+
+    LBRACKET        shift and go to state 2
+    VARIABLE        shift and go to state 3
+
+    pred                           shift and go to state 11
+
+state 8
+
+    (4) pred -> LBRACKET pred IMPLICATION . pred RBRACKET
+    (1) pred -> . LBRACKET NOT pred RBRACKET
+    (2) pred -> . LBRACKET pred AND pred RBRACKET
+    (3) pred -> . LBRACKET pred OR pred RBRACKET
+    (4) pred -> . LBRACKET pred IMPLICATION pred RBRACKET
+    (5) pred -> . VARIABLE
+
+    LBRACKET        shift and go to state 2
+    VARIABLE        shift and go to state 3
+
+    pred                           shift and go to state 12
+
+state 9
+
+    (1) pred -> LBRACKET NOT pred . RBRACKET
+
+    RBRACKET        shift and go to state 13
+
+
+state 10
+
+    (2) pred -> LBRACKET pred AND pred . RBRACKET
+
+    RBRACKET        shift and go to state 14
+
+
+state 11
+
+    (3) pred -> LBRACKET pred OR pred . RBRACKET
+
+    RBRACKET        shift and go to state 15
+
+
+state 12
+
+    (4) pred -> LBRACKET pred IMPLICATION pred . RBRACKET
+
+    RBRACKET        shift and go to state 16
+
+
+state 13
+
+    (1) pred -> LBRACKET NOT pred RBRACKET .
+
+    RBRACKET        reduce using rule 1 (pred -> LBRACKET NOT pred RBRACKET .)
+    AND             reduce using rule 1 (pred -> LBRACKET NOT pred RBRACKET .)
+    OR              reduce using rule 1 (pred -> LBRACKET NOT pred RBRACKET .)
+    IMPLICATION     reduce using rule 1 (pred -> LBRACKET NOT pred RBRACKET .)
+    $end            reduce using rule 1 (pred -> LBRACKET NOT pred RBRACKET .)
+
+
+state 14
+
+    (2) pred -> LBRACKET pred AND pred RBRACKET .
+
+    RBRACKET        reduce using rule 2 (pred -> LBRACKET pred AND pred RBRACKET .)
+    AND             reduce using rule 2 (pred -> LBRACKET pred AND pred RBRACKET .)
+    OR              reduce using rule 2 (pred -> LBRACKET pred AND pred RBRACKET .)
+    IMPLICATION     reduce using rule 2 (pred -> LBRACKET pred AND pred RBRACKET .)
+    $end            reduce using rule 2 (pred -> LBRACKET pred AND pred RBRACKET .)
+
+
+state 15
+
+    (3) pred -> LBRACKET pred OR pred RBRACKET .
+
+    RBRACKET        reduce using rule 3 (pred -> LBRACKET pred OR pred RBRACKET .)
+    AND             reduce using rule 3 (pred -> LBRACKET pred OR pred RBRACKET .)
+    OR              reduce using rule 3 (pred -> LBRACKET pred OR pred RBRACKET .)
+    IMPLICATION     reduce using rule 3 (pred -> LBRACKET pred OR pred RBRACKET .)
+    $end            reduce using rule 3 (pred -> LBRACKET pred OR pred RBRACKET .)
+
+
+state 16
+
+    (4) pred -> LBRACKET pred IMPLICATION pred RBRACKET .
+
+    RBRACKET        reduce using rule 4 (pred -> LBRACKET pred IMPLICATION pred RBRACKET .)
+    AND             reduce using rule 4 (pred -> LBRACKET pred IMPLICATION pred RBRACKET .)
+    OR              reduce using rule 4 (pred -> LBRACKET pred IMPLICATION pred RBRACKET .)
+    IMPLICATION     reduce using rule 4 (pred -> LBRACKET pred IMPLICATION pred RBRACKET .)
+    $end            reduce using rule 4 (pred -> LBRACKET pred IMPLICATION pred RBRACKET .)
+
