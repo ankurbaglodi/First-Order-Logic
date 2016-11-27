@@ -1,0 +1,5 @@
+2
+(~Loves(Bill, Santa))
+Loves(Jhonny, Santa)
+7
+(Travel(Santa, Christmas) => (Child(x) & (Present(y) & Give(Santa, y, x))))
